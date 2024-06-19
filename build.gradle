@@ -1,0 +1,111 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.6'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'idea'
+}
+base{
+    archivesBaseName = 'auth'
+    group 'com.endside'
+    version '1.0-SNAPSHOT'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+ext {
+    mapstructVersion = "1.5.5.Final"
+    flywayVersion = "9.22.0"
+    awssdkVersion = "2.23.10"
+}
+
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
+    maven { url 'https://repo.maven.apache.org/maven2' }
+    maven { url 'https://repo.gradle.org/gradle/libs-releases-local' }
+}
+
+
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation "org.springframework.boot:spring-boot-starter-cache"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    implementation 'org.modelmapper:modelmapper:3.1.0'
+    implementation 'com.auth0:java-jwt:4.4.0'
+    implementation 'javax.mail:mail:1.5.0-b01'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'org.slf4j:jcl-over-slf4j:2.0.7'
+    implementation 'org.projectlombok:lombok:1.18.28'
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"  // flyway
+    implementation "org.flywaydb:flyway-mysql:${flywayVersion}" // flyway - mysql
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation 'com.google.api-client:google-api-client:2.2.0' // google api for credential
+    implementation 'com.github.toss:toss-cert-java-sdk:0.0.11'
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64' // Only m1 mac book for webflux
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'               // webclient test
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.11.0'    // webclient test
+    testImplementation 'io.projectreactor:reactor-test:3.1.0.RELEASE' // webclient test
+    testImplementation 'ch.qos.logback:logback-classic:1.2.12'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.28'
+    implementation 'com.jcraft:jsch:0.1.55'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.xml.bind:jakarta.xml.bind-api'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.security:spring-security-test'
+    // https://mvnrepository.com/artifact/software.amazon.awssdk/sns
+    implementation platform("software.amazon.awssdk:bom:${awssdkVersion}")
+    implementation "software.amazon.awssdk:sns:${awssdkVersion}"
+    implementation "software.amazon.awssdk:apache-client:${awssdkVersion}"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+}
+
+task unpackJar(type: Copy) {
+    def unpackDir = "$buildDir/dependency"
+    def jarFile = "$buildDir/libs/${rootProject.name}-${version}.jar"
+    delete unpackDir
+    from zipTree(jarFile)
+    into unpackDir
+}
+
+build {
+    finalizedBy unpackJar
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs = [
+            '-Amapstruct.suppressGeneratorTimestamp=true'
+    ]
+}

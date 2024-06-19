@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="ko"  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="800px" style="max-width: 800px; padding: 0 10px 0 10px;">
+    <tr>
+        <td align="center" style="padding: 40px 0 24px 0; font-size: 32px; line-height: 1.5; color: rgba(0, 0, 0, 0.8); height: 48px; font-family: AppleSDGothicNeo !important;">
+            Noname Company
+        </td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#ffffff" style="padding: 0 0 0 0; border-radius: 14px; border: solid 1px #e1e1e1;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="700px" style="padding: 40px 30px 40px 30px; height: 100%;">
+                <tr>
+                    <td align="center" style="max-width: 200px; font-size: 21px; text-align: center; font-weight: 600; line-height: 1.27; color: #000000; padding-bottom: 40px; font-family: AppleSDGothicNeo !important;">
+                        이메일 인증을 위한 안내입니다.
+                    </td>
+                </tr>
+                <tr align="center">
+                    <td style="height: 1px;">
+                        <hr>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size: 16px; line-height: 1.5; color: rgba(0, 0, 0, 0.8); padding: 30px 0 20px 0; font-family: AppleSDGothicNeo !important;">
+                        안녕하세요.
+                        <br />
+                        Unimewo를 이용해 주셔서 진심으로 감사드립니다.
+                        <br />
+                        <br />
+                        아래 ‘이메일 인증’버튼을 클릭하여 이메일 인증을 완료해 주세요.
+                        <br />
+                        <br />
+                        감사합니다.
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="bottom">
+                        <a th:href="@{https://www.bemily.com/service/check/{page}(page=${page},email=${email},token=${token})}" target="_blank">
+                            <img style="width: 200px; height: 52px; object-fit: contain;" src="https://bemily-home.s3.ap-northeast-2.amazonaws.com/assets/btn-certification-email.png" alt="인증버튼" />
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="padding: 30px 30px 0 30px; opacity: 0.5; font-size: 14px; line-height: 1.29; color: rgba(0, 0, 0, 0.8); font-family: AppleSDGothicNeo !important;">
+            본 메일은 발신전용 메일로 회신이 되지 않습니다.
+            <br />
+            <br />
+            전화 : 0000-0000  | 이메일 : customer-service@test.com
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="padding: 16px 30px 30px 30px; opacity: 0.5; font-size: 14px; font-weight: bold; color: rgba(0, 0, 0, 0.8); font-family: AppleSDGothicNeo !important;">
+            <b>© Unimewo Inc. All Rights Reserved.</b>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

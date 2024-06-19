@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  mysql-db:
+    image: mysql:8.4.0
+    container_name: local_mysql84
+    volumes:
+      - .docker/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - ~/container/mysql84:/var/lib/mysql
+    ports:
+      - 3306:3306
+    command: --mysql-native-password=ON
+    restart: always
+    environment:
+      MYSQL_DATABASE: mydatabase
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypass
+  redis:
+    image: redis:7.2
+    container_name: local_redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ~/container/redis/data:/data
+    restart: always
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    command: redis-server --port 6379

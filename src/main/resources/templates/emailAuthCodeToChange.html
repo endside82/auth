@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="800px" style="max-width: 800px; padding: 0 10px 0 10px;">
+    <tr>
+        <td align="center" style="padding: 40px 0 24px 0; font-size: 32px; line-height: 1.5; color: rgba(0, 0, 0, 0.8); height: 48px; font-family: AppleSDGothicNeo !important;">
+            Noname Company
+        </td>
+    </tr>
+    <tr>
+        <td align="center" bgcolor="#ffffff" style="padding: 0 0 0 0; border-radius: 14px; border: solid 1px #e1e1e1; height: 530px; margin: 0 1px 0 1px;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="700px" style="padding: 40px 30px 40px 30px; height: 100%;">
+                <tr>
+                    <td align="center" style="max-width: 200px; font-size: 21px; text-align: center; font-weight: 600; line-height: 1.27; color: #000000; height: 28px; padding-bottom: 40px; font-family: AppleSDGothicNeo !important;" th:text="${title}">
+                </tr>
+                <tr align="center">
+                    <td style="height: 1px;">
+                        <hr>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size: 16px; line-height: 1.5; color: rgba(0, 0, 0, 0.8); height: 48px; padding: 30px 0 20px 0; font-family: AppleSDGothicNeo !important;">
+                        안녕하세요.
+                        <br />
+                        요청하신 인증코드를 안내해 드립니다.
+                        <br />
+                        <br />
+                        아래 인증코드 6자리를 진행 중인 화면에 입력해 주세요.
+                        <br />
+                        인증코드는 메일이 발송된 시점부터 <span style="color: #672af9;">1시간만 유효</span>합니다.
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" bgcolor="#f6f6f6" style="font-size: 16px; line-height: 1.5; color: rgba(0, 0, 0, 0.8);">
+                        <table align="center" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td align="center" style="opacity: 0.6; font-size: 14px; text-align: center; color: rgba(0, 0, 0, 0.8); font-family: AppleSDGothicNeo !important;">
+                                    인증코드
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table align="center" border="0" cellpadding="0" cellspacing="0" style="border-spacing: 8px; font-family: AppleSDGothicNeo !important;">
+                                        <tr>
+                                            <td th:each="number : ${otp}" width="18" style="border-bottom: 2px solid #000000; font-size: 24px; text-align: center; color: rgba(0, 0, 0, 0.8); font-family: AppleSDGothicNeo !important;" >
+                                                <span th:text="${number}"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="padding: 30px 30px 0 30px; opacity: 0.5; font-size: 14px; line-height: 1.29; color: rgba(0, 0, 0, 0.8); font-family: AppleSDGothicNeo !important;">
+            본 메일은 발신전용 메일로 회신이 되지 않습니다.
+            <br />
+            <br />
+            전화 : 0000-0000  | 이메일 : customer-service@test.com
+        </td>
+    </tr>
+    <tr>
+        <td align="left" style="padding: 16px 30px 30px 30px; opacity: 0.5; font-size: 14px; font-weight: bold; color: rgba(0, 0, 0, 0.8); font-family: AppleSDGothicNeo !important;">
+            <b>© Unimewo Inc. All Rights Reserved.</b>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

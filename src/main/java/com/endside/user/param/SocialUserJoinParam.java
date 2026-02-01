@@ -15,4 +15,5 @@ public class SocialUserJoinParam {
     private UserType userType;
     private String uniqueId;
     private Os os;
+    private boolean isAgreeMarketing;
 }

@@ -1,26 +1,36 @@
 package com.endside.user.model;
 
+import com.endside.user.constants.LoginType;
 import com.endside.user.constants.UserStatus;
-import com.endside.user.constants.UserType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @Entity(name = "users")
 @NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private long userId;
 
+    @Column(name = "login_id")
+    private String loginId;
+
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "status", nullable = false)
     private UserStatus status;
 
@@ -33,32 +43,27 @@ public class Users {
     @Column(name = "mobile", nullable = false)
     private String mobile;
 
-    @Column(name = "user_type", nullable = false)
-    private UserType userType;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "login_type", nullable = false)
+    private LoginType loginType;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Column(name = "init_at")
+    private LocalDateTime initAt;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "login_at")
     private LocalDateTime loginAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "logout_at")
     private LocalDateTime logoutAt;
+
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     @Transient
     private LoginAddInfo loginAddInfo;
-
-
-    @Builder
-    public Users(long userId, UserStatus status, String password, String email, String mobile, UserType userType) {
-        this.userId = userId;
-        this.status = status;
-        this.password = password;
-        this.email = email;
-        this.mobile = mobile;
-        this.userType = userType;
-    }
 }

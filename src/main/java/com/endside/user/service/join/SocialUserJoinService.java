@@ -96,12 +96,13 @@ public class SocialUserJoinService {
 
 
     private void setDummyValue(UserJoinParam userJoinParam, SocialUserJoinParam socialUserJoinParam) {
-        userJoinParam.setUserType(socialUserJoinParam.getUserType());
         userJoinParam.setOs(socialUserJoinParam.getOs());
         userJoinParam.setUniqueId(socialUserJoinParam.getUniqueId());
         userJoinParam.setPassword(UUID.randomUUID().toString());
         userJoinParam.setVersion("0.1");
         userJoinParam.setLoginType(LoginType.SOCIAL);
+        userJoinParam.setAgreeMarketing(socialUserJoinParam.isAgreeMarketing());
+        userJoinParam.setAgreeParentAlarm(false);
         // email could be empty
         if (userJoinParam.getEmail() == null) {
             userJoinParam.setEmail("");
@@ -154,7 +155,7 @@ public class SocialUserJoinService {
         // Add new device to DB
         userJoinCommonService.saveDevice(userJoinParam);
         // Add agreement
-        userJoinCommonService.saveAgreement(userId, userJoinParam.isAgreeMarketing());
+        userJoinCommonService.saveAgreement(userId, userJoinParam.isAgreeMarketing(), userJoinParam.isAgreeParentAlarm());
         // 후처리 이벤트
         Events.raise(new JoinEvent(userId));
         return UserSimple.builder()

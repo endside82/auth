@@ -4,12 +4,17 @@ import lombok.Getter;
 
 @Getter
 public enum LoginType {
-
-    EMAIL("EMAIL"), SOCIAL("SOCIAL");
+    EMAIL(0, "EMAIL" ),
+    MOBILE(1, "MOBILE"),
+    SOCIAL(2,"SOCIAL"),
+    ID_PASS(3,"ID_PASS"),
+    GUEST(4, "GUEST");
 
     private final String loginType;
+    private final int typeNum;
 
-    LoginType(String loginType) {
+    LoginType(int typeNum, String loginType) {
+        this.typeNum = typeNum;
         this.loginType = loginType.toUpperCase();
     }
 

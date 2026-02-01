@@ -6,7 +6,7 @@
 
 ## 사용된 기술 스택
 - JAVA21
-- Spring boot 3.2.X
+- Spring boot 3.3.X
 - Gradle 8.5
 - JPA with QueryDSL and flyway
 - mysql 8.x 

@@ -1,5 +1,7 @@
 package com.endside.user.service.join;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import com.endside.config.error.ErrorCode;
 import com.endside.config.error.exception.JoinFailureException;
 import com.endside.user.constants.UserStatus;
@@ -15,19 +17,16 @@ import com.endside.user.param.UserJoinParam;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserJoinCommonService {
     private final UserRepository userRepository;
     private final DeviceRepository deviceRepository;
     private final AgreementRepository agreementRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    private UserJoinCommonService(UserRepository userRepository, DeviceRepository deviceRepository, AgreementRepository agreementRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
-        this.deviceRepository = deviceRepository;
-        this.agreementRepository = agreementRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
 
     // 디바이스 저장
     public void saveDevice(UserJoinParam userJoinParam) {
@@ -43,18 +42,24 @@ public class UserJoinCommonService {
         return userRepository.save(Users
                 .builder()
                 .email(userJoinParam.getEmail())
+                .loginId(userJoinParam.getLoginId())
                 .mobile(userJoinParam.getMobile())
-                .userType(userJoinParam.getUserType())
+                .loginType(userJoinParam.getLoginType())
                 .password(bCryptPasswordEncoder.encode(userJoinParam.getPassword()))
                 .status(UserStatus.NORMAL)
                 .build());
     }
 
-    protected Agreement saveAgreement(long userId, boolean isAgreeMarketing) {
+    protected Agreement saveAgreement(long userId, boolean isAgreeMarketing, boolean isAgreeParentAlarm) {
         return agreementRepository.save(
                 Agreement.builder()
                         .userId(userId)
-                        .agreeMarketing(isAgreeMarketing)
+                        .agreeTerm(1)
+                        .agreePrivacy(1)
+                        .agreeMarketing(isAgreeMarketing ? 1 : 0)
+                        .agreeParentAlarm(isAgreeParentAlarm ? 1 : 0)
+                        .marketingModifiedAt(LocalDateTime.now())
+                        .parentAlarmModifiedAt(LocalDateTime.now())
                         .build()
         );
     }
@@ -65,7 +70,6 @@ public class UserJoinCommonService {
             throw new JoinFailureException(ErrorCode.EXIST_PHONE_NO);
         });
     }
-
 
     // 이메일 중복 검사
     public void checkHasSameEmail(String email) {
@@ -86,11 +90,9 @@ public class UserJoinCommonService {
         // Add new device to DB
         saveDevice(userJoinParam);
         // Add agreement
-        saveAgreement(userId, userJoinParam.isAgreeMarketing());
+        saveAgreement(userId, userJoinParam.isAgreeMarketing(), userJoinParam.isAgreeParentAlarm());
         // 후처리 이벤트
         Events.raise(new JoinEvent(userId));
         return newUsers;
     }
-
-
 }

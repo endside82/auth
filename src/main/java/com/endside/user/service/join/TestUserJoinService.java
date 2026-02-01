@@ -3,9 +3,9 @@ package com.endside.user.service.join;
 
 import com.endside.user.constants.LoginType;
 import com.endside.user.constants.Os;
-import com.endside.user.model.UserSimple;
 import com.endside.user.model.Users;
 import com.endside.user.param.UserJoinParam;
+import com.endside.user.vo.UserSimpleVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +24,11 @@ public class TestUserJoinService implements UserJoinService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public UserSimple joinUser(UserJoinParam userJoinParam) {
+    public UserSimpleVo joinUser(UserJoinParam userJoinParam) {
         setDummyValue(userJoinParam);
         checkParameter(userJoinParam);
         Users user = userJoinCommonService.addUser(userJoinParam);
-        return UserSimple.builder()
+        return UserSimpleVo.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())
                 .loginType(userJoinParam.getLoginType())

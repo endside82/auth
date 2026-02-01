@@ -1,6 +1,7 @@
 package com.endside.user.controller;
 
 import com.endside.user.model.UserSimple;
+import com.endside.user.vo.UserSimpleVo;
 import com.endside.user.param.EmailCheckParam;
 import com.endside.user.service.JwtAuthenticationService;
 import com.endside.user.service.join.*;
@@ -52,22 +53,23 @@ public class UserJoinController {
     public ResponseEntity<?> joinEmail(@RequestBody UserJoinParam userJoinParam,
                                   HttpServletRequest request,
                                   HttpServletResponse response) {
-                UserSimple userSimple = emailUserJoinService.joinUser(userJoinParam);
-        HashMap<String, String> newTokens = jwtAuthenticationService.createTokensAfterJoin(userSimple.getEmail(), userSimple.getUserId(), webUtil.getClientIp(request), LoginType.EMAIL, userJoinParam.getOs());
+        UserSimpleVo userSimpleVo = emailUserJoinService.joinUser(userJoinParam);
+        HashMap<String, String> newTokens = jwtAuthenticationService.createTokensAfterJoin(userSimpleVo.getEmail(), userSimpleVo.getUserId(), webUtil.getClientIp(request), LoginType.EMAIL, userJoinParam.getOs());
         response.addHeader(JwtProperties.HEADER_AUTH, newTokens.get(JwtProperties.RESULT_MAP_AUTH));
         response.addHeader(JwtProperties.REFRESH_HEADER_STRING, newTokens.get(JwtProperties.RESULT_MAP_REFRESH));  // refresh 토큰
-        return ResponseEntity.ok(userSimple);
+        return ResponseEntity.ok(userSimpleVo);
     }
+
     @PostMapping("/join/mobile")
     @ResponseBody
     public ResponseEntity<?> joinMobile(@RequestBody UserJoinParam userJoinParam,
                                   HttpServletRequest request,
                                   HttpServletResponse response) {
-        UserSimple userSimple = mobileUserJoinService.joinUser(userJoinParam);
-        HashMap<String, String> newTokens = jwtAuthenticationService.createTokensAfterJoin(userSimple.getEmail(), userSimple.getUserId(), webUtil.getClientIp(request), LoginType.EMAIL, userJoinParam.getOs());
+        UserSimpleVo userSimpleVo = mobileUserJoinService.joinUser(userJoinParam);
+        HashMap<String, String> newTokens = jwtAuthenticationService.createTokensAfterJoin(userSimpleVo.getEmail(), userSimpleVo.getUserId(), webUtil.getClientIp(request), LoginType.MOBILE, userJoinParam.getOs());
         response.addHeader(JwtProperties.HEADER_AUTH, newTokens.get(JwtProperties.RESULT_MAP_AUTH));
         response.addHeader(JwtProperties.REFRESH_HEADER_STRING, newTokens.get(JwtProperties.RESULT_MAP_REFRESH));  // refresh 토큰
-        return ResponseEntity.ok(userSimple);
+        return ResponseEntity.ok(userSimpleVo);
     }
 
     @PostMapping("/join/social")
@@ -86,11 +88,11 @@ public class UserJoinController {
     public ResponseEntity<?> joinTest(@RequestBody UserJoinParam userJoinParam,
                                       HttpServletRequest request,
                                       HttpServletResponse response) throws Exception {
-        UserSimple userSimple = testUserJoinService.joinUser(userJoinParam);
-        HashMap<String, String> newTokens = jwtAuthenticationService.createTokensAfterJoin(userSimple.getEmail(), userSimple.getUserId(), webUtil.getClientIp(request), LoginType.EMAIL, userJoinParam.getOs());
+        UserSimpleVo userSimpleVo = testUserJoinService.joinUser(userJoinParam);
+        HashMap<String, String> newTokens = jwtAuthenticationService.createTokensAfterJoin(userSimpleVo.getEmail(), userSimpleVo.getUserId(), webUtil.getClientIp(request), LoginType.EMAIL, userJoinParam.getOs());
         response.addHeader(JwtProperties.HEADER_AUTH, newTokens.get(JwtProperties.RESULT_MAP_AUTH));
         response.addHeader(JwtProperties.REFRESH_HEADER_STRING, newTokens.get(JwtProperties.RESULT_MAP_REFRESH));  // refresh 토큰
-        return ResponseEntity.ok(userSimple);
+        return ResponseEntity.ok(userSimpleVo);
     }
 
     // 이메일 사용 가능 여부 체크

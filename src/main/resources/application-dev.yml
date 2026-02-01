@@ -4,16 +4,16 @@ spring:
       on-profile: dev
   datasource:
     write:
-      jdbc-url: jdbc:mysql://RDB_ADDRESS:3306/mydatabase?autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useTimezone=true&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
-      username: admin
-      password: adminpass
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:mydatabase}?autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useTimezone=true&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+      username: ${DB_USERNAME:myuser}
+      password: ${DB_PASSWORD:changeme}
       minimum-idle: 1
       maximum-pool-size: 2
       useServerPrepStmts: true
     read:
-      jdbc-url: jdbc:mysql://RDB_ADDRESS:3306/mydatabase?autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useTimezone=true&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
-      username: admin
-      password: adminpass
+      jdbc-url: jdbc:mysql://${DB_READ_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:mydatabase}?autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useTimezone=true&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+      username: ${DB_USERNAME:myuser}
+      password: ${DB_PASSWORD:changeme}
       minimum-idle: 1
       maximum-pool-size: 2
       useServerPrepStmts: true
@@ -40,9 +40,10 @@ server:
       enabled: false
   port: 38080
 redis:
-  host: dev-an2-elc-cr-care-os2hpl.serverless.apn2.cache.amazonaws.com
-  port: 6379
-  auth: false
+  host: ${REDIS_HOST:127.0.0.1}
+  port: ${REDIS_PORT:6379}
+  auth: ${REDIS_AUTH:false}
+  password: ${REDIS_PASSWORD:}
   authentication:
     database: 0
   user:
@@ -54,22 +55,25 @@ redis:
   type: STANDARD
 aws:
   ses:
-    aws_key_id: AWS_KEY_ID
-    aws_key_password: AWS_KEY_PASSWORD
-    host: SES_SMT
+    aws_key_id: ${AWS_SES_KEY_ID:your-ses-key-id}
+    aws_key_password: ${AWS_SES_KEY_PASSWORD:your-ses-key-password}
+    host: ${AWS_SES_HOST:email-smtp.region.amazonaws.com}
     port: 587
-    configuration: AWS_SES_CONFIGURATION
-    from: FROM_EMAIL_ADDRESS
-    fromName: FROM_EMAIL_NAME
+    configuration: ${AWS_SES_CONFIGURATION:your-configuration-set}
+    from: ${AWS_SES_FROM:noreply@example.com}
+    fromName: ${AWS_SES_FROM_NAME:Your App}
   sns:
     ec2policy: false
     credentials:
-      access-key: AWS_ACCESS_KEY
-      secret-key: AWS_SECRET_KEY
+      access-key: ${AWS_ACCESS_KEY:your-access-key}
+      secret-key: ${AWS_SECRET_KEY:your-secret-key}
 ssh:
   use: false
 jwt:
-  secret: mysecret
+  secret: ${JWT_SECRET:your-jwt-secret-key-min-32-characters}
+toss:
+  client-id: ${TOSS_CLIENT_ID:your-toss-client-id}
+  client-secret: ${TOSS_CLIENT_SECRET:your-toss-client-secret}
 email:
   check:
     page: email-dev

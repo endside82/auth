@@ -1,17 +1,17 @@
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: stg-compose
   datasource:
     write:
-      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:mydatabase}?autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useTimezone=true&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+      jdbc-url: jdbc:mysql://${DB_HOST:mysql}:${DB_PORT:3306}/${DB_NAME:mydatabase}?autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useTimezone=true&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
       username: ${DB_USERNAME:myuser}
       password: ${DB_PASSWORD:changeme}
       minimum-idle: 1
       maximum-pool-size: 2
       useServerPrepStmts: true
     read:
-      jdbc-url: jdbc:mysql://${DB_READ_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:mydatabase}?autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useTimezone=true&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+      jdbc-url: jdbc:mysql://${DB_READ_HOST:mysql}:${DB_PORT:3306}/${DB_NAME:mydatabase}?autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useTimezone=true&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
       username: ${DB_USERNAME:myuser}
       password: ${DB_PASSWORD:changeme}
       minimum-idle: 1
@@ -29,13 +29,13 @@ spring:
         jdbc:
           time_zone: Asia/Seoul
   flyway:
-    enabled: true
-    baselineOnMigrate: true
+    enabled: ${FLYWAY_ENABLED:false}
+    baselineOnMigrate: ${FLYWAY_BASELINE_ON_MIGRATE:false}
     locations: "classpath:db/migration"
-    validateMigrationNaming: true
+    validateMigrationNaming: ${FLYWAY_VALIDATE_MIGRATION_NAMING:false}
   docker:
     compose:
-      lifecycle-management: none # none, start-only, start-and-stop
+      lifecycle-management: none
 server:
   error:
     include-exception: false
@@ -45,7 +45,7 @@ server:
       enabled: false
   port: 38080
 redis:
-  host: ${REDIS_HOST:127.0.0.1}
+  host: ${REDIS_HOST:redis}
   port: ${REDIS_PORT:6379}
   auth: ${REDIS_AUTH:false}
   password: ${REDIS_PASSWORD:}
@@ -53,10 +53,10 @@ redis:
     database: 0
   user:
     database: 1
-  noti:
-    database: 3
   sso:
     database: 2
+  noti:
+    database: 3
   type: STANDARD
 server-config:
   urls: ${SERVER_CONFIG_URLS:http://localhost:3000,http://localhost:3010}
@@ -66,11 +66,11 @@ aws:
     aws_key_password: ${AWS_SES_KEY_PASSWORD:your-ses-key-password}
     host: ${AWS_SES_HOST:email-smtp.region.amazonaws.com}
     port: 587
-    configuration: ${AWS_SES_CONFIGURATION:your-configuration-set}
+    configuration: ${AWS_SES_CONFIGURATION:}
     from: ${AWS_SES_FROM:noreply@example.com}
     fromName: ${AWS_SES_FROM_NAME:Your App}
   sns:
-    ec2policy: false
+    ec2policy: ${AWS_SNS_EC2_POLICY:false}
     credentials:
       access-key: ${AWS_ACCESS_KEY:your-access-key}
       secret-key: ${AWS_SECRET_KEY:your-secret-key}
@@ -90,7 +90,7 @@ toss:
   client-id: ${TOSS_CLIENT_ID:your-toss-client-id}
   client-secret: ${TOSS_CLIENT_SECRET:your-toss-client-secret}
 email:
-  verify: ${EMAIL_VERIFY:true}
+  verify: ${EMAIL_VERIFY:false}
   check:
     page: email-dev
   exceed_cnt: 1000

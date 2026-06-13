@@ -2,12 +2,12 @@ package com.endside.config.db;
 
 import com.endside.config.ssh.SshTunneling;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
+import org.hibernate.boot.model.naming.PhysicalNamingStrategySnakeCaseImpl;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
+import org.springframework.boot.flyway.autoconfigure.FlywayDataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
+import org.springframework.boot.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -104,7 +104,7 @@ public class DataSourceConfig {
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
         Properties properties = new Properties();
         properties.put("hibernate.jdbc.time_zone", "Asia/Seoul");
-        properties.put("hibernate.physical_naming_strategy", new CamelCaseToUnderscoresNamingStrategy());
+        properties.put("hibernate.physical_naming_strategy", new PhysicalNamingStrategySnakeCaseImpl());
         properties.put("hibernate.implicit_naming_strategy", new SpringImplicitNamingStrategy());
         entityManagerFactoryBean.setJpaProperties(properties);
         return entityManagerFactoryBean;

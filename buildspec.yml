@@ -19,7 +19,7 @@ phases:
       - echo $(basename ./build/libs/*.jar)
       - echo $(basename ./build/dependency/*.*)
       - pwd
-      - docker build --build-arg SPRING_PROFILES_ACTIVE=dev --build-arg JAVA_OPTS='-XX:+UseG1GC -Xms512m -Xmx512m' -t {AWS-ID}.dkr.ecr.ap-northeast-2.amazonaws.com/dev-auth:latest . -f dev.Dockerfile --pull --no-cache
+      - docker build --build-arg SPRING_PROFILES_ACTIVE=dev --build-arg JAVA_OPTS='-XX:+UseG1GC -Xms512m -Xmx512m' -t {AWS-ID}.dkr.ecr.ap-northeast-2.amazonaws.com/dev-auth:latest . -f Dockerfile --pull --no-cache
   post_build:
     commands:
       - echo $(basename ./build/libs/*.jar)

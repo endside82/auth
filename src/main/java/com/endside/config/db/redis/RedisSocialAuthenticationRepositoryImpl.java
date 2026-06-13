@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +24,7 @@ public class RedisSocialAuthenticationRepositoryImpl {
     public RedisSocialAuthenticationRepositoryImpl(@Qualifier("socialRedisTemplate") RedisTemplate<String, SocialProviderVerifyVo> socialRedisTemplate) {
         this.socialRedisTemplate = socialRedisTemplate;
         this.socialRedisTemplate.setKeySerializer(new StringRedisSerializer());
-        this.socialRedisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(SocialProviderVerifyVo.class));
+        this.socialRedisTemplate.setValueSerializer(new JacksonJsonRedisSerializer<>(SocialProviderVerifyVo.class));
         this.setOperations = socialRedisTemplate.opsForValue();
     }
 

@@ -20,7 +20,9 @@ spring:
   main:
     allow-bean-definition-overriding: true
   autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+    exclude: org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
+  jackson:
+    time-zone: Asia/Seoul
   jpa:
     properties:
       hibernate:
@@ -31,6 +33,9 @@ spring:
     baselineOnMigrate: true
     locations: "classpath:db/migration"
     validateMigrationNaming: true
+  docker:
+    compose:
+      lifecycle-management: none # none, start-only, start-and-stop
 server:
   error:
     include-exception: false
@@ -49,10 +54,12 @@ redis:
   user:
     database: 1
   noti:
-    database: 5
+    database: 3
   sso:
-    database: 6
+    database: 2
   type: STANDARD
+server-config:
+  urls: ${SERVER_CONFIG_URLS:http://localhost:3000,http://localhost:3010}
 aws:
   ses:
     aws_key_id: ${AWS_SES_KEY_ID:your-ses-key-id}
@@ -71,12 +78,25 @@ ssh:
   use: false
 jwt:
   secret: ${JWT_SECRET:your-jwt-secret-key-min-32-characters}
+  duplicate-login-check: ${JWT_DUPLICATE_LOGIN_CHECK:false}
+oauth:
+  google:
+    audiences: ${OAUTH_GOOGLE_AUDIENCES:}
+  kakao:
+    user-info-url: ${OAUTH_KAKAO_USER_INFO_URL:https://kapi.kakao.com/v2/user/me}
+  naver:
+    user-info-url: ${OAUTH_NAVER_USER_INFO_URL:https://openapi.naver.com/v1/nid/me}
 toss:
   client-id: ${TOSS_CLIENT_ID:your-toss-client-id}
   client-secret: ${TOSS_CLIENT_SECRET:your-toss-client-secret}
 email:
+  verify: ${EMAIL_VERIFY:true}
   check:
     page: email-dev
   exceed_cnt: 1000
 sms:
+  verify: ${SMS_VERIFY:false}
   exceed_cnt: 1000
+otp:
+  bypass:
+    enabled: ${OTP_BYPASS_ENABLED:true}

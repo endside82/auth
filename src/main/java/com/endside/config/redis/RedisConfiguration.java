@@ -16,7 +16,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -70,9 +70,7 @@ public class RedisConfiguration {
         if (redisType.compareTo("CLUSTER") == 0) {
             // clustering 구성 config
             RedisClusterConfiguration redisClusterConfiguration = getRedisClusterConf();
-            LettuceConnectionFactory redisConnectionFactory = new LettuceConnectionFactory(redisClusterConfiguration);
-            redisConnectionFactory.setDatabase(DBnum);
-            return redisConnectionFactory;
+            return new LettuceConnectionFactory(redisClusterConfiguration);
         }
         // else Redis is standard
         RedisStandaloneConfiguration redisStandaloneConfiguration = getRedisStandardConf(DBnum);
@@ -149,7 +147,7 @@ public class RedisConfiguration {
     public CacheManager cacheManager() {
         RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(authRedisConnectionFactory());
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(GenericJacksonJsonRedisSerializer.builder().build()))
                 .prefixCacheNameWith("cache:")
                 .entryTtl(Duration.ofHours(24L));
         builder.cacheDefaults(configuration);

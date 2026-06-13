@@ -1,8 +1,8 @@
 package com.endside.social.service;
 
+import com.endside.config.error.exception.RestException;
 import com.endside.social.constants.TossConstants;
 import com.endside.social.vo.TossAccessTokenVo;
-import com.endside.social.vo.TossIdentificationVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.MockResponse;
@@ -18,8 +18,6 @@ import reactor.test.StepVerifier;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-
-import static junit.framework.TestCase.assertEquals;
 
 /**
  * 토스 본인 인증(간편인증)
@@ -43,16 +41,16 @@ public class TossVerificationServiceTest {
 
     @Test
     public void set_access_token_then_setup_access_token() throws Exception {
-        mockTossVerificationService = new TossVerificationService();
+        mockTossVerificationService = new TossVerificationService("", "", false);
         ReflectionTestUtils.setField(TossVerificationService.class, "TOSS_BEARER_KEY", "aaa");
         ReflectionTestUtils.setField(TossVerificationService.class, "TOSS_BEARER_KEY_EXPIRE_DATETIME", LocalDateTime.now().plusSeconds(3600));
-        TossIdentificationVo tossIdentificationVo = mockTossVerificationService.getTossAuthUrlAndTxId();
-
+        Assertions.assertThrows(RestException.class, () -> mockTossVerificationService.getTossAuthUrlAndTxId());
     }
+
     @Test
     public void set_access_token_then_setup_access_token_mock() throws Exception {
         String tossMockUrl = mockBackEnd.url("").toString();
-        mockTossVerificationService = new TossVerificationService(tossMockUrl);
+        mockTossVerificationService = new TossVerificationService("client-id", "client-secret", true, tossMockUrl, tossMockUrl);
 
         long timeInSeconds = LocalDateTime.now()
                 .plusMinutes(10)
@@ -72,8 +70,8 @@ public class TossVerificationServiceTest {
         }
         mockBackEnd.enqueue(new MockResponse()
                 .setBody(body)
-                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE));
-        Mono<TossAccessTokenVo> tossAccessTokenVoMono = tossVerificationService.getAccessToken();
+                .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
+        Mono<TossAccessTokenVo> tossAccessTokenVoMono = mockTossVerificationService.getAccessToken();
         StepVerifier.create(tossAccessTokenVoMono)
                 .expectNextMatches(retrieveVo -> retrieveVo.getAccessToken()
                         .equals(token))

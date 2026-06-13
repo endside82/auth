@@ -54,15 +54,24 @@ public class TossVerificationService {
             @Value("${toss.client-id:}") String tossClientId,
             @Value("${toss.client-secret:}") String tossClientSecret,
             @Value("${toss.enabled:false}") boolean tossEnabled) {
+        this(tossClientId, tossClientSecret, tossEnabled, TOSS_AUTH_URL, TOSS_CERT_URL);
+    }
+
+    TossVerificationService(
+            String tossClientId,
+            String tossClientSecret,
+            boolean tossEnabled,
+            String authBaseUrl,
+            String certBaseUrl) {
         this.tossClientId = tossClientId;
         this.tossClientSecret = tossClientSecret;
         this.tossEnabled = tossEnabled;
         this.authWebClient = WebClient.builder()
-                .baseUrl(TOSS_AUTH_URL)
+                .baseUrl(authBaseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .build();
         this.certWebClient = WebClient.builder()
-                .baseUrl(TOSS_CERT_URL)
+                .baseUrl(certBaseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
@@ -124,7 +133,7 @@ public class TossVerificationService {
         }
     }
 
-    private Mono<TossAccessTokenVo> getAccessToken() {
+    Mono<TossAccessTokenVo> getAccessToken() {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("grant_type", "client_credentials");
         requestBody.add("client_id", tossClientId);
